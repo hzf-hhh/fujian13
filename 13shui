@@ -1,0 +1,1291 @@
+from tkinter import *
+from tkinter import ttk
+
+import requests
+import json
+class Initial_interface():#初始界面
+    def __init__(self,master):
+        self.root = master
+        self.root.title("初始界面")
+        width = 1080
+        height = 608
+        screenwidth = self.root.winfo_screenwidth()
+        screenheight = self.root.winfo_screenheight()
+        alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width)/2, (screenheight - height)/2)
+        self.root.geometry(alignstr)
+        b1=Button(self.root, text="注册",bg="#E6E6FA",font=("华文行楷", 65),relief="flat",command=self.click1).place(x=75, y=139, width=303, height=94)
+        Button(self.root, text="登陆",bg="#E6E6FA",relief="flat",font=("华文行楷", 65),command=self.click2).place(x=648, y=365, width=303, height=94)
+    def click1(self):
+        self.root.destroy()
+        root2 = Tk()
+        photo = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\llg.gif")
+        Label(root2, image=photo).place(x=0, y=0, width=1080, height=608)  # 把图片整合到标签类中
+        Registration_Interface(root2)
+    def click2(self):
+        self.root.destroy()
+        root2 = Tk()
+        photo = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\llg.gif")
+        Label(root2, image=photo).place(x=0, y=0, width=1080, height=608)  # 把图片整合到标签类中
+        landing_Interface(root2)
+class landing_Interface():#登陆
+    def __init__(self, master):
+        self.root = master
+        self.root.title("登录界面")
+        self.root.geometry('1080x608')
+        v1 = StringVar()
+        v2 = StringVar()
+        self.e1 = Entry(self.root,font="Helvetica 40 bold", textvariable=v1)
+        self.e1.place(x=163, y=73, width=315, height=65)
+        self.e2 = Entry(self.root, font="Helvetica 40 bold",textvariable=v2)
+        self.e2.place(x=163, y=162, width=315, height=65)
+        Label(self.root, text="账户", font=("华文行楷", 33),relief="flat",bg="#ffffff").place(x=53, y=75, width=80, height=62)
+        Label(self.root, text="密码", font=("华文行楷", 33),relief="flat",bg="#ffffff").place(x=53, y=166, width=80, height=62)
+        Button(self.root, text="登录", font=("华文行楷", 40),relief="flat",bg="#ffffff",command=self.click1).place(x=57, y=309, width=153, height=74)
+        Button(self.root, text="返回", font=("华文行楷", 40), relief="flat", bg="#ffffff", command=self.callback).place(x=346,y=306,width=153,height=74)
+        self.root.mainloop()
+    def callback(self):
+        self.root.destroy()
+        root = Tk()
+        photo = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\D.gif")
+        Label(root, image=photo).place(x=0, y=0, width=1080, height=608)  # 把图片整合到标签类中
+        Initial_interface(root)
+        root.mainloop()
+    def click1(self):
+        url = 'http://api.revth.com/auth/login'
+        form_data = {
+            "username": self.e1.get(),
+            "password": self.e2.get(),
+        }
+        headers = {
+            "Content-Type": "application/json",
+        }
+        response = requests.post(url=url, headers=headers, data=json.dumps(form_data), verify=False)
+        x=response.json()
+        m=x['status']
+        if(m==0):#成功登陆，进入菜单选项界面
+            n = x['data']['token']
+            user_id=x['data']['user_id']
+            self.root.destroy()
+            root = Tk()
+            photo = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\l.gif")
+            Label(root, image=photo).place(x=0, y=0, width=1080, height=608)  # 把图片整合到标签类中
+            menu_interface(root,n,user_id)
+        else:#返回错误显示警告窗口
+            tl=Toplevel()
+            photo1 = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\vd.gif")
+            tl.geometry('400x400')
+            tl.title("警告")
+            l1=Label(tl, image=photo1).place(x=0, y=0, width=400, height=400)  # 把图片整合到标签类中
+            l1.photo = photo1
+class Registration_Interface():#注册界面
+    def __init__(self, master):
+        self.root = master
+        self.root.title("注册界面")
+        self.root.geometry('1080x608')
+        v1 = StringVar()
+        v2 = StringVar()
+        self.e1 = Entry(self.root,font="Helvetica 40 bold", textvariable=v1)
+        self.e1.place(x=163, y=73, width=315, height=65)
+        self.e2 = Entry(self.root,font="Helvetica 40 bold", textvariable=v2, show="*")
+        self.e2.place(x=163, y=162, width=315, height=65)
+        Label(self.root, text="账户",font=("华文行楷", 33),relief="flat",bg="#ffffff").place(x=53, y=75, width=80, height=62)
+        Label(self.root, text="密码",font=("华文行楷", 33),relief="flat",bg="#ffffff").place(x=53, y=166, width=80, height=62)
+        Button(self.root, text="注册",font=("华文行楷", 40),relief="flat",bg="#ffffff",command=self.click1).place(x=57, y=309, width=153, height=74)
+        Button(self.root, text="返回", font=("华文行楷", 40), relief="flat", bg="#ffffff", command=self.callback).place(x=346,y=306,width=153,height=74)
+        self.root.mainloop()
+    def callback(self):
+        self.root.destroy()
+        root = Tk()
+        photo = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\D.gif")
+        Label(root, image=photo).place(x=0, y=0, width=1080, height=608)  # 把图片整合到标签类中
+        Initial_interface(root)
+        root.mainloop()
+    def click1(self):
+        usename=self.e1.get()
+        password=self.e2.get()
+        self.root.destroy()
+        root=Tk()
+        photo = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\llg.gif")
+        Label(root, image=photo).place(x=0, y=0, width=1080, height=608)  # 把图片整合到标签类中
+        Registration_validation_Interface(root,usename,password)
+class Registration_validation_Interface():#注册+验证界面
+    def __init__(self, master,usename,password):
+        self.root = master
+        self.root.title("学号验证")
+        width = 1080
+        height = 608
+        screenwidth = self.root.winfo_screenwidth()
+        screenheight = self.root.winfo_screenheight()
+        alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2, (screenheight - height) / 2)
+        self.root.geometry(alignstr)
+        self.username=usename
+        self.password=password
+        v1 = StringVar()
+        v2 = StringVar()
+        self.e1 = Entry(self.root,font="Helvetica 40 bold", textvariable=v1)
+        self.e1.place(x=163, y=73, width=315, height=65)
+        self.e2 = Entry(self.root, font="Helvetica 40 bold",textvariable=v2, show="*")
+        self.e2.place(x=163, y=162, width=315, height=65)
+        Label(self.root, text="学号",font=("华文行楷", 33),relief="flat",bg="#ffffff").place(x=53, y=75, width=80, height=62)
+        Label(self.root, text="密码",font=("华文行楷", 33),relief="flat",bg="#ffffff").place(x=53, y=166, width=80, height=62)
+        Button(self.root, text="验证",font=("华文行楷", 40),relief="flat",bg="#ffffff",command=self.click1).place(x=57, y=309, width=153, height=74)
+        Button(self.root, text="返回", font=("华文行楷", 40), relief="flat", bg="#ffffff", command=self.callback).place(x=346,y=306,width=153,height=74)
+        self.root.mainloop()
+    def callback(self):
+        self.root.destroy()
+        root2 = Tk()
+        photo = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\llg.gif")
+        Label(root2, image=photo).place(x=0, y=0, width=1080, height=608)  # 把图片整合到标签类中
+        landing_Interface(root2)
+    def click1(self):
+        url = 'http://www.revth.com:12300/auth/register2'
+        form_data = {
+            "username":self.username,
+            "password":self.password,
+            "student_number": self.e1.get(),
+            "student_password": self.e2.get()
+        }
+        headers = {
+            "Content-Type": 'application/json',
+        }
+        response = requests.post(url=url, headers=headers, data=json.dumps(form_data), verify=False)
+        self.root.destroy()
+        root2 = Tk()
+        photo = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\llg.gif")
+        Label(root2, image=photo).place(x=0, y=0, width=1080, height=608)  # 把图片整合到标签类中
+        landing_Interface(root2)
+class menu_interface():  # 菜单界面
+    def __init__(self, master,n,user_id):
+        self.root = master
+        self.root.title("菜单")
+        self.token=n
+        self.user_id=user_id
+        width = 1080
+        height = 607
+        screenwidth = self.root.winfo_screenwidth()
+        screenheight = self.root.winfo_screenheight()
+        alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2, (screenheight - height) / 2)
+        self.root.geometry(alignstr)
+        Button(self.root, text="开启战局",font=("华文行楷", 45),relief="flat", command=self.click1,bg="#ffffff").place(x=46, y=60, width=239, height=61)
+        Button(self.root, text="排行榜",font=("华文行楷", 45), relief="flat",command=self.click2,bg="#ffffff").place(x=46, y=184, width=239, height=61)
+        Button(self.root, text="历史战局列表",font=("华文行楷", 30), relief="flat",command=self.click3,bg="#ffffff").place(x=46, y=303, width=239, height=61)
+        Button(self.root, text="历史战局详情",font=("华文行楷", 30),relief="flat", command=self.click4,bg="#ffffff").place(x=46, y=422, width=239, height=61)
+        Button(self.root, text="退出",font=("华文行楷", 45), relief="flat",command=self.click5,bg="#ffffff").place(x=907, y=386, width=143, height=84)
+        self.root.mainloop()
+    def click1(self):#开启战局
+        token=self.token
+        user_id=self.user_id
+        self.root.destroy()
+        url='http://api.revth.com/game/open'
+        headers={
+            "X-Auth-Token": self.token,
+        }
+        response = requests.post(url=url, headers=headers)
+        x=response.json()
+        id = x['data']['id']
+        card=x['data']['card']
+        import itertools
+        import numpy
+        import copy
+        #####算法：牌=card
+        danpai = [  # 单牌
+            [0, 0, 0, 0, 0, 1, 1, 2, 2, 4, 7, 14, 33],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+
+        one_pair = [  # 单对
+            [46, 48, 50, 51, 54, 56, 60, 63, 68, 74, 81, 89, 97],
+            [2, 3, 4, 4, 5, 7, 8, 10, 12, 15, 19, 24, 33],
+            [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 3]
+        ]
+
+        two_pair = [  # 双对
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 36, 37, 38, 40, 44, 46, 49, 54, 57, 62, 64, 0],
+            [0, 2, 3, 4, 4, 6, 7, 8, 10, 11, 13, 13, 0]
+        ]
+
+        triple = [  # 三条
+            [99, 99, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+            [63, 65, 69, 71, 72, 73, 73, 73, 74, 74, 75, 75, 75],
+            [11, 12, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15]
+        ]
+
+        shunzi = [  # 顺子
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 77, 78, 81, 83, 85, 87, 88, 90, 91, 92],
+            [0, 0, 0, 16, 17, 20, 22, 24, 26, 28, 32, 33, 36]
+        ]
+
+        tonghua = [  # 同花
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 93, 93, 93, 93, 94, 95, 97, 98],
+            [0, 0, 0, 0, 0, 36, 36, 37, 38, 40, 44, 49, 61]
+        ]
+
+        hulu = [  # 3+2
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [98, 98, 99, 99, 99, 100, 100, 100, 100, 100, 100, 100, 100],
+            [64, 67, 70, 71, 73, 75, 77, 80, 82, 85, 88, 91, 94]
+        ]
+
+        zhadan = [  # 炸弹
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+            [93, 94, 95, 95, 96, 96, 96, 97, 97, 98, 98, 98, 98]
+        ]
+
+        tonghuashun = [  # 同花顺
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+            [0, 0, 0, 98, 98, 99, 99, 99, 99, 99, 99, 100, 100]
+        ]
+
+        shuru = card
+        str_x = ""
+        all_list = []
+        for i in range(len(shuru)):
+            if shuru[i] == '$' or shuru[i] == '*' or shuru[i] == '#' or shuru[i] == '&':
+                if shuru[i + 1] == '1':
+                    str_x = shuru[i] + shuru[i + 1] + shuru[i + 2]
+                else:
+                    str_x = shuru[i] + shuru[i + 1]
+                all_list.append(str_x)
+        bottom_alllist = list(itertools.combinations(all_list, 5))  # $10&2*K#A$8*J&5$6#8$7&5*4&3
+
+        alscore = 0
+        score = 0
+        albottom = ""
+        almiddle = ""
+        alhead = ""
+
+        for bottom_tuple in bottom_alllist:
+            all_list2 = copy.deepcopy(all_list)
+            for bottom_pai in bottom_tuple:
+                all_list2.remove(bottom_pai)
+            middle_alllist = list(itertools.combinations(all_list2, 5))
+            for middle_tuple in middle_alllist:
+                all_list3 = copy.deepcopy(all_list2)
+                for middle_pai in middle_tuple:
+                    all_list3.remove(middle_pai)
+
+                bottom = ""
+                middle = ""
+                head = ""
+                score = 0
+                for zz in bottom_tuple:
+                    bottom += zz
+                    bottom += ' '
+                for zz in middle_tuple:
+                    middle += zz
+                    middle += ' '
+                for zz in all_list3:
+                    head += zz
+                    head += ' '
+                bottom.rsplit()
+                middle.rsplit()
+                head.rsplit()
+                paihao_num = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # numpy.zeros(13, dtype=int)
+                huase_num = [0, 0, 0, 0]  ##numpy.zeros(4, dtype=int)
+                paixing = [0, 0, 0, 0]  ##numpy.zeros(4, dtype=int)
+                bottom_dengji = 1
+                bottom_mark = 0
+                for i in bottom:
+                    if i == '$':
+                        huase_num[0] += 1
+                    elif i == '&':
+                        huase_num[1] += 1
+                    elif i == '*':
+                        huase_num[2] += 1
+                    elif i == '#':
+                        huase_num[3] += 1
+                    elif i == '2':
+                        paihao_num[0] += 1
+                    elif i == '3':
+                        paihao_num[1] += 1
+                    elif i == '4':
+                        paihao_num[2] += 1
+                    elif i == '5':
+                        paihao_num[3] += 1
+                    elif i == '6':
+                        paihao_num[4] += 1
+                    elif i == '7':
+                        paihao_num[5] += 1
+                    elif i == '8':
+                        paihao_num[6] += 1
+                    elif i == '9':
+                        paihao_num[7] += 1
+                    elif i == '1':
+                        paihao_num[8] += 1
+                    elif i == 'J':
+                        paihao_num[9] += 1
+                    elif i == 'Q':
+                        paihao_num[10] += 1
+                    elif i == 'K':
+                        paihao_num[11] += 1
+                    elif i == 'A':
+                        paihao_num[12] += 1
+                for i in range(0, 13):
+                    if paihao_num[i] == 4:
+                        paixing[3] += 1
+                    elif paihao_num[i] == 3:
+                        paixing[2] += 1
+                    elif paihao_num[i] == 2:
+                        paixing[1] += 1
+                mark_shun = 0
+                for i in range(12, 4, -1):
+                    if paihao_num[i] == 1 and paihao_num[i - 1] == 1 and paihao_num[i - 2] == 1 and paihao_num[
+                        i - 3] == 1 and paihao_num[i - 4] == 1:
+                        mark_shun = 1
+                if huase_num[0] == 5 or huase_num[1] == 5 or huase_num[2] == 5 or huase_num[3] == 5:
+                    if mark_shun == 1:
+                        bottom_dengji = 9
+                        for i in range(12, -1, -1):
+                            if paihao_num[i] == 1:
+                                score += tonghuashun[2][i]
+                                bottom_mark = i
+                                break
+                    else:
+                        bottom_dengji = 6
+                        for i in range(12, -1, -1):
+                            if paihao_num[i] == 1:
+                                score += tonghua[2][i]
+                                bottom_mark = i
+                                break
+                elif paixing[3] == 1:
+                    for i in range(12, -1, -1):
+                        if paihao_num[i] == 4:
+                            score += zhadan[2][i]
+                            bottom_mark = i
+                            break
+                    bottom_dengji = 8
+                elif paixing[2] == 1 and paixing[1] == 1:
+                    for i in range(12, -1, -1):
+                        if paihao_num[i] == 3:
+                            score += hulu[2][i]
+                            bottom_mark = i
+                            break
+                    bottom_dengji = 7
+                elif mark_shun == 1:
+                    for i in range(12, -1, -1):
+                        if paihao_num[i] == 1:
+                            score += shunzi[2][i]
+                            bottom_mark = i
+                            break
+                    bottom_dengji = 5
+                elif paixing[2] == 1:
+                    for i in range(12, -1, -1):
+                        if paihao_num[i] == 3:
+                            score += triple[2][i]
+                            bottom_mark = i
+                            break
+                    bottom_dengji = 4
+                elif paixing[1] == 2:
+                    for i in range(12, -1, -1):
+                        if paihao_num[i] == 2:
+                            score += two_pair[2][i]
+                            bottom_mark = i
+                            break
+                    bottom_dengji = 3
+                elif paixing[1] == 1:
+                    for i in range(12, -1, -1):
+                        if paihao_num[i] == 2:
+                            score += one_pair[2][i]
+                            bottom_mark = i
+                            break
+                    bottom_dengji = 2
+
+                paihao_num1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # numpy.zeros(13, dtype=int)
+                huase_num1 = [0, 0, 0, 0]  # numpy.zeros(4, dtype=int)
+                paixing1 = [0, 0, 0, 0]  # numpy.zeros(4, dtype=int)
+                middle_dengji = 1
+                middle_mark = 0
+                for i in middle:
+                    if i == '$':
+                        huase_num1[0] += 1
+                    elif i == '&':
+                        huase_num1[1] += 1
+                    elif i == '*':
+                        huase_num1[2] += 1
+                    elif i == '#':
+                        huase_num1[3] += 1
+                    elif i == '2':
+                        paihao_num1[0] += 1
+                    elif i == '3':
+                        paihao_num1[1] += 1
+                    elif i == '4':
+                        paihao_num1[2] += 1
+                    elif i == '5':
+                        paihao_num1[3] += 1
+                    elif i == '6':
+                        paihao_num1[4] += 1
+                    elif i == '7':
+                        paihao_num1[5] += 1
+                    elif i == '8':
+                        paihao_num1[6] += 1
+                    elif i == '9':
+                        paihao_num1[7] += 1
+                    elif i == '1':
+                        paihao_num1[8] += 1
+                    elif i == 'J':
+                        paihao_num1[9] += 1
+                    elif i == 'Q':
+                        paihao_num1[10] += 1
+                    elif i == 'K':
+                        paihao_num1[11] += 1
+                    elif i == 'A':
+                        paihao_num1[12] += 1
+                for i in range(0, 13):
+                    if paihao_num1[i] == 4:
+                        paixing1[3] += 1
+                    elif paihao_num1[i] == 3:
+                        paixing1[2] += 1
+                    elif paihao_num1[i] == 2:
+                        paixing1[1] += 1
+                mark_shun = 0
+                for i in range(12, 4, -1):
+                    if paihao_num1[i] == 1 and paihao_num1[i - 1] == 1 and paihao_num1[i - 2] == 1 and paihao_num1[
+                        i - 3] == 1 and \
+                            paihao_num1[i - 4] == 1:
+                        mark_shun = 1
+                if huase_num1[0] == 5 or huase_num1[1] == 5 or huase_num1[2] == 5 or huase_num1[3] == 5:
+                    if mark_shun == 1:
+                        middle_dengji = 9
+                        for i in range(12, -1, -1):
+                            if paihao_num1[i] == 1:
+                                score += tonghuashun[1][i]
+                                middle_mark = i
+                                break
+                    else:
+                        middle_dengji = 6
+                        for i in range(12, -1, -1):
+                            if paihao_num1[i] == 1:
+                                score += tonghua[1][i]
+                                middle_mark = i
+                                break
+                elif paixing1[3] == 1:
+                    middle_dengji = 8
+                    for i in range(12, -1, -1):
+                        if paihao_num1[i] == 4:
+                            score += zhadan[1][i]
+                            middle_mark = i
+                            break
+                elif paixing1[2] == 1 and paixing1[1] == 1:
+                    middle_dengji = 7
+                    for i in range(12, -1, -1):
+                        if paihao_num1[i] == 3:
+                            score += hulu[1][i]
+                            middle_mark = i
+                            break
+                elif mark_shun == 1:
+                    middle_dengji = 5
+                    for i in range(12, -1, -1):
+                        if paihao_num1[i] == 1:
+                            score += shunzi[1][i]
+                            middle_mark = i
+                            break
+                elif paixing1[2] == 1:
+                    middle_dengji = 4
+                    for i in range(12, -1, -1):
+                        if paihao_num1[i] == 3:
+                            score += triple[1][i]
+                            middle_mark = i
+                            break
+                elif paixing1[1] == 2:
+                    middle_dengji = 3
+                    for i in range(12, -1, -1):
+                        if paihao_num1[i] == 2:
+                            score += two_pair[1][i]
+                            middle_mark = i
+                            break
+                elif paixing1[1] == 1:
+                    middle_dengji = 2
+                    for i in range(12, -1, -1):
+                        if paihao_num1[i] == 1:
+                            score += one_pair[1][i]
+                            middle_mark = i
+                            break
+
+                if bottom_dengji < middle_dengji:
+                    continue
+                elif bottom_dengji == middle_dengji:
+                    if bottom_mark < middle_mark:
+                        continue
+
+                paihao_num2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # numpy.zeros(13, dtype=int)
+                huase_num2 = [0, 0, 0, 0]  # numpy.zeros(4, dtype=int)
+                paixing2 = [0, 0, 0, 0]  # numpy.zeros(4, dtype=int)
+                head_dengji = 1
+                head_mark = 0
+                for i in head:
+                    if i == '$':
+                        huase_num2[0] += 1
+                    elif i == '&':
+                        huase_num2[1] += 1
+                    elif i == '*':
+                        huase_num2[2] += 1
+                    elif i == '#':
+                        huase_num2[3] += 1
+                    elif i == '2':
+                        paihao_num2[0] += 1
+                    elif i == '3':
+                        paihao_num2[1] += 1
+                    elif i == '4':
+                        paihao_num2[2] += 1
+                    elif i == '5':
+                        paihao_num2[3] += 1
+                    elif i == '6':
+                        paihao_num2[4] += 1
+                    elif i == '7':
+                        paihao_num2[5] += 1
+                    elif i == '8':
+                        paihao_num2[6] += 1
+                    elif i == '9':
+                        paihao_num2[7] += 1
+                    elif i == '1':
+                        paihao_num2[8] += 1
+                    elif i == 'J':
+                        paihao_num2[9] += 1
+                    elif i == 'Q':
+                        paihao_num2[10] += 1
+                    elif i == 'K':
+                        paihao_num2[11] += 1
+                    elif i == 'A':
+                        paihao_num2[12] += 1
+                for i in range(0, 13):
+                    if paihao_num2[i] == 3:
+                        paixing2[2] += 1
+                    elif paihao_num2[i] == 2:
+                        paixing2[1] += 1
+                if huase_num2[0] == 3 or huase_num2[1] == 3 or huase_num2[2] == 3 or huase_num2[3] == 3:
+                    head_dengji = 6
+                    for i in range(12, -1, -1):
+                        if paihao_num2[i] == 1:
+                            score += tonghua[0][i]
+                            head_mark = i
+                            break
+                elif paixing2[2] == 1:
+                    head_dengji = 4
+                    for i in range(12, -1, -1):
+                        if paihao_num2[i] == 3:
+                            score += triple[0][i]
+                            head_mark = i
+                            break
+                elif paixing2[1] == 1:
+                    head_dengji = 2
+                    for i in range(12, -1, -1):
+                        if paihao_num2[i] == 2:
+                            score += one_pair[0][i]
+                            head_mark = i
+                            break
+                else:
+                    for i in range(12, -1, -1):
+                        if paihao_num2[i] == 1:
+                            score += danpai[0][i]
+                            head_mark = i
+                            break
+                if head_dengji > middle_dengji:
+                    continue
+                elif head_dengji == middle_dengji:
+                    if head_mark > middle_mark:
+                        continue
+                if score > alscore:
+                    alscore = score
+                    albottom = bottom
+                    almiddle = middle
+                    alhead = head
+
+        print(alhead)
+        print(almiddle)
+        print(albottom)
+        ###算法
+        # *2*3*4#5#6#7#8#9*10*J*Q*K*A
+        url = 'http://api.revth.com/game/submit'
+        form_data = {
+            "id": id,
+            "card": [
+                str(alhead)[:-1],
+                str(almiddle)[:-1],
+                str(albottom)[:-1]
+            ]
+        }
+        headers = {
+            "X-Auth-Token": token,
+            "Content-Type": "application/json"
+        }
+        response = requests.post(url=url, headers=headers, data=json.dumps(form_data))
+        print("url返回结果：")
+        print(response.text)
+        root = Tk()
+        photo = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\mm.gif")
+        Label(root, image=photo).place(x=0, y=0, width=1061, height=602 ) # 把图片整合到标签类中
+        Label(root, text=str(alhead), font=("华文行楷", 15), bg="#eee7e1").place(x=793, y=173, width=165, height=57)
+        Label(root, text=str(almiddle), font=("华文行楷", 15), bg="#eee7e1").place(x=793, y=268, width=245, height=53)
+        Label(root, text=str(albottom), font=("华文行楷", 15), bg="#eee7e1").place(x=793, y=366, width=245, height=53)
+        warStart(root,token,id,card,user_id)
+    def click2(self):
+        w = Tk()
+        w.title("排行榜")
+        scrollBar = Scrollbar(w)
+        scrollBar.pack(side=RIGHT, fill=Y)
+        tree = ttk.Treeview(w, yscrollcommand=scrollBar.set,show="headings")
+        scrollBar.config(command=tree.yview)
+        def treeviewClick(event):
+            tree.bind('<Button-1>', treeviewClick)
+        tree.bind('<Button-1>', treeviewClick)
+        tree["columns"] = ("player_id", "score", "name")
+        tree.column("player_id", width=100, anchor='center')  # 表示列,不显示
+        tree.column("score", width=100, anchor='center')
+        tree.column("name", width=100, anchor='center')
+        tree.heading("player_id", text="player_id")  # 显示表头
+        tree.heading("score", text="score")
+        tree.heading("name", text="name")
+        #排行榜
+        response = requests.get('http://api.revth.com/rank')
+        x = response.json()
+        n = 0
+        h = 0
+        for i in x:
+            m = 0
+            for j in i.values():
+                if (m == 0):
+                    a = str(j)
+                elif (m == 1):
+                    b = str(j)
+                else:
+                    c = str(j)
+                m = m + 1
+                n = n + 1
+            #tkiner库中的treeview组件插入
+            tree.insert("", int(h), text="end", values=(a, b, c))
+            h = h + 1
+        tree.pack()
+    def click3(self):#历史战局列表
+        w = Tk()
+        w.title("历史战局列表")
+        scrollBar = Scrollbar(w)
+        scrollBar.pack(side=RIGHT, fill=Y)
+        tree = ttk.Treeview(w, yscrollcommand=scrollBar.set)
+        scrollBar.config(command=tree.yview)
+        def treeviewClick(event):
+            tree.bind('<Button-1>', treeviewClick)
+        tree.bind('<Button-1>', treeviewClick)
+        tree["columns"] = ("id", "card", "score")
+        tree.column("id", width=100, anchor='center')  # 表示列,不显示
+        tree.column("card", width=400, anchor='center')
+        tree.column("score", width=100, anchor='center')
+        tree.heading("id", text="id")  # 显示表头
+        tree.heading("card", text="card")
+        tree.heading("score", text="score")
+        page=0
+        url= "http://api.revth.com/history?player_id="+ str(self.user_id)+"&limit=50&page="+ str(page)
+        headers={
+    "X-Auth-Token":self.token
+         }
+        response = requests.get(url=url,headers=headers)
+        x=response.json()
+        x=x["data"]
+        n = 0
+        h = 0
+        for i in x:
+            m = 0
+            for j in i.values():
+                if (m == 0):
+                    id = str(j)
+                elif (m == 1):
+                    card =str(j)
+                elif(m==2):
+                    score = str(j)
+                else :timestamp=str(j)
+                m = m + 1
+                n = n + 1
+            tree.insert("", int(h), text=timestamp, values=(id, card, score))
+            h = h + 1
+        tree.pack()
+    def click4(self):#历史战局详情
+        user_id = self.user_id
+        token = self.token
+        self.root.destroy()
+        root = Tk()
+        photo = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\hzf.gif")
+        Label(root, image=photo).place(x=0, y=0, width=1080, height=608)  # 把图片整合到标签类中
+        choose_interface(root, token, user_id)
+    def click5(self):
+        self.root.destroy()
+        url="http://api.revth.com/auth/logout"
+        headers = {
+            "X-Auth-Token":self.token,
+        }
+        response = requests.post(url=url,headers=headers)
+        root = Tk()
+        photo = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\D.gif")
+        Label(root, image=photo).place(x=0, y=0, width=1080, height=608)  # 把图片整合到标签类中
+        Initial_interface(root)
+        root.mainloop()
+class  warStart():#开启战局
+    def __init__(self, master,n,id,card,user_id):
+        self.token=n
+        self.user_id=user_id
+        self.id=id
+        self.card=card
+        self.root = master
+        width = 1061
+        height = 602
+        screenwidth = self.root.winfo_screenwidth()
+        screenheight = self.root.winfo_screenheight()
+        alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2, (screenheight - height) / 2)
+        self.root.geometry(alignstr)
+        Label(self.root, text=str(card),font=("华文行楷", 30),bg="#eee7e1").place(x=259, y=53, width=757, height=80)
+        Label(self.root, text=str(id), font=("华文行楷", 30),bg="#eee7e1").place(x=542, y=544, width=166, height=43)
+        Label(self.root, text="再开", font=("华文行楷", 36), bg="#eee7e1").place(x=36, y=416, width=92, height=51)
+        Label(self.root, text="局", font=("华文行楷", 36), bg="#eee7e1").place(x=178, y=416, width=52, height=51)
+        v1 = StringVar()
+        self.e1 = Entry(self.root, font="Helvetica 30 bold", textvariable=v1)
+        self.e1.place(x=128, y=416, width=50, height=51)
+        Button(self.root, text="启动",font=("华文行楷", 35),relief="flat", command=self.click10,bg="#ffffff").place(x=104, y=480, width=199, height=76)
+        Button(self.root, text="退出",font=("华文行楷", 35),relief="flat", command=self.click8,bg="#ffffff").place(x=719, y=480, width=199, height=76)
+        self.root.title("出牌")
+        self.root.mainloop()
+    def click8(self):#退出
+        token=self.token
+        user_id=self.user_id
+
+        self.root.destroy()
+        root = Tk()
+        photo = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\l.gif")
+        Label(root, image=photo).place(x=0, y=0, width=1080, height=608)  # 把图片整合到标签类中
+        menu_interface(root,token,user_id)
+    def click10(self):#启动n次
+        token = self.token
+        user_id = self.user_id
+        n=int(self.e1.get())
+        self.root.destroy()
+
+        while(n):
+            ##发牌
+            url = 'http://api.revth.com/game/open'
+            headers = {
+                "X-Auth-Token": token,
+            }
+            response = requests.post(url=url, headers=headers)
+            x = response.json()
+            id = x['data']['id']
+            #提取返回结果的牌
+            card = x['data']['card']
+            import itertools
+            import numpy
+            import copy
+            #####算法：牌=card
+            danpai = [  # 单牌
+                [0, 0, 0, 0, 0, 1, 1, 2, 2, 4, 7, 14, 33],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            ]
+
+            one_pair = [  # 单对
+                [46, 48, 50, 51, 54, 56, 60, 63, 68, 74, 81, 89, 97],
+                [2, 3, 4, 4, 5, 7, 8, 10, 12, 15, 19, 24, 33],
+                [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 3]
+            ]
+
+            two_pair = [  # 双对
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 36, 37, 38, 40, 44, 46, 49, 54, 57, 62, 64, 0],
+                [0, 2, 3, 4, 4, 6, 7, 8, 10, 11, 13, 13, 0]
+            ]
+
+            triple = [  # 三条
+                [99, 99, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+                [63, 65, 69, 71, 72, 73, 73, 73, 74, 74, 75, 75, 75],
+                [11, 12, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15]
+            ]
+
+            shunzi = [  # 顺子
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 77, 78, 81, 83, 85, 87, 88, 90, 91, 92],
+                [0, 0, 0, 16, 17, 20, 22, 24, 26, 28, 32, 33, 36]
+            ]
+
+            tonghua = [  # 同花
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 93, 93, 93, 93, 94, 95, 97, 98],
+                [0, 0, 0, 0, 0, 36, 36, 37, 38, 40, 44, 49, 61]
+            ]
+
+            hulu = [  # 3+2
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [98, 98, 99, 99, 99, 100, 100, 100, 100, 100, 100, 100, 100],
+                [64, 67, 70, 71, 73, 75, 77, 80, 82, 85, 88, 91, 94]
+            ]
+
+            zhadan = [  # 炸弹
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+                [93, 94, 95, 95, 96, 96, 96, 97, 97, 98, 98, 98, 98]
+            ]
+
+            tonghuashun = [  # 同花顺
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+                [0, 0, 0, 98, 98, 99, 99, 99, 99, 99, 99, 100, 100]
+            ]
+
+            shuru = card
+            str_x = ""
+            all_list = []
+            for i in range(len(shuru)):
+                if shuru[i] == '$' or shuru[i] == '*' or shuru[i] == '#' or shuru[i] == '&':
+                    if shuru[i + 1] == '1':
+                        str_x = shuru[i] + shuru[i + 1] + shuru[i + 2]
+                    else:
+                        str_x = shuru[i] + shuru[i + 1]
+                    all_list.append(str_x)
+            bottom_alllist = list(itertools.combinations(all_list, 5))  # $10&2*K#A$8*J&5$6#8$7&5*4&3
+
+            alscore = 0
+            score = 0
+            albottom = ""
+            almiddle = ""
+            alhead = ""
+
+            for bottom_tuple in bottom_alllist:
+                all_list2 = copy.deepcopy(all_list)
+                for bottom_pai in bottom_tuple:
+                    all_list2.remove(bottom_pai)
+                middle_alllist = list(itertools.combinations(all_list2, 5))
+                for middle_tuple in middle_alllist:
+                    all_list3 = copy.deepcopy(all_list2)
+                    for middle_pai in middle_tuple:
+                        all_list3.remove(middle_pai)
+
+                    bottom = ""
+                    middle = ""
+                    head = ""
+                    score = 0
+                    for zz in bottom_tuple:
+                        bottom += zz
+                        bottom += ' '
+                    for zz in middle_tuple:
+                        middle += zz
+                        middle += ' '
+                    for zz in all_list3:
+                        head += zz
+                        head += ' '
+                    bottom.rsplit()
+                    middle.rsplit()
+                    head.rsplit()
+                    paihao_num = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # numpy.zeros(13, dtype=int)
+                    huase_num = [0, 0, 0, 0]  ##numpy.zeros(4, dtype=int)
+                    paixing = [0, 0, 0, 0]  ##numpy.zeros(4, dtype=int)
+                    bottom_dengji = 1
+                    bottom_mark = 0
+                    for i in bottom:
+                        if i == '$':
+                            huase_num[0] += 1
+                        elif i == '&':
+                            huase_num[1] += 1
+                        elif i == '*':
+                            huase_num[2] += 1
+                        elif i == '#':
+                            huase_num[3] += 1
+                        elif i == '2':
+                            paihao_num[0] += 1
+                        elif i == '3':
+                            paihao_num[1] += 1
+                        elif i == '4':
+                            paihao_num[2] += 1
+                        elif i == '5':
+                            paihao_num[3] += 1
+                        elif i == '6':
+                            paihao_num[4] += 1
+                        elif i == '7':
+                            paihao_num[5] += 1
+                        elif i == '8':
+                            paihao_num[6] += 1
+                        elif i == '9':
+                            paihao_num[7] += 1
+                        elif i == '1':
+                            paihao_num[8] += 1
+                        elif i == 'J':
+                            paihao_num[9] += 1
+                        elif i == 'Q':
+                            paihao_num[10] += 1
+                        elif i == 'K':
+                            paihao_num[11] += 1
+                        elif i == 'A':
+                            paihao_num[12] += 1
+                    for i in range(0, 13):
+                        if paihao_num[i] == 4:
+                            paixing[3] += 1
+                        elif paihao_num[i] == 3:
+                            paixing[2] += 1
+                        elif paihao_num[i] == 2:
+                            paixing[1] += 1
+                    mark_shun = 0
+                    for i in range(12, 4, -1):
+                        if paihao_num[i] == 1 and paihao_num[i - 1] == 1 and paihao_num[i - 2] == 1 and paihao_num[
+                            i - 3] == 1 and paihao_num[i - 4] == 1:
+                            mark_shun = 1
+                    if huase_num[0] == 5 or huase_num[1] == 5 or huase_num[2] == 5 or huase_num[3] == 5:
+                        if mark_shun == 1:
+                            bottom_dengji = 9
+                            for i in range(12, -1, -1):
+                                if paihao_num[i] == 1:
+                                    score += tonghuashun[2][i]
+                                    bottom_mark = i
+                                    break
+                        else:
+                            bottom_dengji = 6
+                            for i in range(12, -1, -1):
+                                if paihao_num[i] == 1:
+                                    score += tonghua[2][i]
+                                    bottom_mark = i
+                                    break
+                    elif paixing[3] == 1:
+                        for i in range(12, -1, -1):
+                            if paihao_num[i] == 4:
+                                score += zhadan[2][i]
+                                bottom_mark = i
+                                break
+                        bottom_dengji = 8
+                    elif paixing[2] == 1 and paixing[1] == 1:
+                        for i in range(12, -1, -1):
+                            if paihao_num[i] == 3:
+                                score += hulu[2][i]
+                                bottom_mark = i
+                                break
+                        bottom_dengji = 7
+                    elif mark_shun == 1:
+                        for i in range(12, -1, -1):
+                            if paihao_num[i] == 1:
+                                score += shunzi[2][i]
+                                bottom_mark = i
+                                break
+                        bottom_dengji = 5
+                    elif paixing[2] == 1:
+                        for i in range(12, -1, -1):
+                            if paihao_num[i] == 3:
+                                score += triple[2][i]
+                                bottom_mark = i
+                                break
+                        bottom_dengji = 4
+                    elif paixing[1] == 2:
+                        for i in range(12, -1, -1):
+                            if paihao_num[i] == 2:
+                                score += two_pair[2][i]
+                                bottom_mark = i
+                                break
+                        bottom_dengji = 3
+                    elif paixing[1] == 1:
+                        for i in range(12, -1, -1):
+                            if paihao_num[i] == 2:
+                                score += one_pair[2][i]
+                                bottom_mark = i
+                                break
+                        bottom_dengji = 2
+
+                    paihao_num1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # numpy.zeros(13, dtype=int)
+                    huase_num1 = [0, 0, 0, 0]  # numpy.zeros(4, dtype=int)
+                    paixing1 = [0, 0, 0, 0]  # numpy.zeros(4, dtype=int)
+                    middle_dengji = 1
+                    middle_mark = 0
+                    for i in middle:
+                        if i == '$':
+                            huase_num1[0] += 1
+                        elif i == '&':
+                            huase_num1[1] += 1
+                        elif i == '*':
+                            huase_num1[2] += 1
+                        elif i == '#':
+                            huase_num1[3] += 1
+                        elif i == '2':
+                            paihao_num1[0] += 1
+                        elif i == '3':
+                            paihao_num1[1] += 1
+                        elif i == '4':
+                            paihao_num1[2] += 1
+                        elif i == '5':
+                            paihao_num1[3] += 1
+                        elif i == '6':
+                            paihao_num1[4] += 1
+                        elif i == '7':
+                            paihao_num1[5] += 1
+                        elif i == '8':
+                            paihao_num1[6] += 1
+                        elif i == '9':
+                            paihao_num1[7] += 1
+                        elif i == '1':
+                            paihao_num1[8] += 1
+                        elif i == 'J':
+                            paihao_num1[9] += 1
+                        elif i == 'Q':
+                            paihao_num1[10] += 1
+                        elif i == 'K':
+                            paihao_num1[11] += 1
+                        elif i == 'A':
+                            paihao_num1[12] += 1
+                    for i in range(0, 13):
+                        if paihao_num1[i] == 4:
+                            paixing1[3] += 1
+                        elif paihao_num1[i] == 3:
+                            paixing1[2] += 1
+                        elif paihao_num1[i] == 2:
+                            paixing1[1] += 1
+                    mark_shun = 0
+                    for i in range(12, 4, -1):
+                        if paihao_num1[i] == 1 and paihao_num1[i - 1] == 1 and paihao_num1[i - 2] == 1 and paihao_num1[
+                            i - 3] == 1 and \
+                                paihao_num1[i - 4] == 1:
+                            mark_shun = 1
+                    if huase_num1[0] == 5 or huase_num1[1] == 5 or huase_num1[2] == 5 or huase_num1[3] == 5:
+                        if mark_shun == 1:
+                            middle_dengji = 9
+                            for i in range(12, -1, -1):
+                                if paihao_num1[i] == 1:
+                                    score += tonghuashun[1][i]
+                                    middle_mark = i
+                                    break
+                        else:
+                            middle_dengji = 6
+                            for i in range(12, -1, -1):
+                                if paihao_num1[i] == 1:
+                                    score += tonghua[1][i]
+                                    middle_mark = i
+                                    break
+                    elif paixing1[3] == 1:
+                        middle_dengji = 8
+                        for i in range(12, -1, -1):
+                            if paihao_num1[i] == 4:
+                                score += zhadan[1][i]
+                                middle_mark = i
+                                break
+                    elif paixing1[2] == 1 and paixing1[1] == 1:
+                        middle_dengji = 7
+                        for i in range(12, -1, -1):
+                            if paihao_num1[i] == 3:
+                                score += hulu[1][i]
+                                middle_mark = i
+                                break
+                    elif mark_shun == 1:
+                        middle_dengji = 5
+                        for i in range(12, -1, -1):
+                            if paihao_num1[i] == 1:
+                                score += shunzi[1][i]
+                                middle_mark = i
+                                break
+                    elif paixing1[2] == 1:
+                        middle_dengji = 4
+                        for i in range(12, -1, -1):
+                            if paihao_num1[i] == 3:
+                                score += triple[1][i]
+                                middle_mark = i
+                                break
+                    elif paixing1[1] == 2:
+                        middle_dengji = 3
+                        for i in range(12, -1, -1):
+                            if paihao_num1[i] == 2:
+                                score += two_pair[1][i]
+                                middle_mark = i
+                                break
+                    elif paixing1[1] == 1:
+                        middle_dengji = 2
+                        for i in range(12, -1, -1):
+                            if paihao_num1[i] == 1:
+                                score += one_pair[1][i]
+                                middle_mark = i
+                                break
+
+                    if bottom_dengji < middle_dengji:
+                        continue
+                    elif bottom_dengji == middle_dengji:
+                        if bottom_mark < middle_mark:
+                            continue
+
+                    paihao_num2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # numpy.zeros(13, dtype=int)
+                    huase_num2 = [0, 0, 0, 0]  # numpy.zeros(4, dtype=int)
+                    paixing2 = [0, 0, 0, 0]  # numpy.zeros(4, dtype=int)
+                    head_dengji = 1
+                    head_mark = 0
+                    for i in head:
+                        if i == '$':
+                            huase_num2[0] += 1
+                        elif i == '&':
+                            huase_num2[1] += 1
+                        elif i == '*':
+                            huase_num2[2] += 1
+                        elif i == '#':
+                            huase_num2[3] += 1
+                        elif i == '2':
+                            paihao_num2[0] += 1
+                        elif i == '3':
+                            paihao_num2[1] += 1
+                        elif i == '4':
+                            paihao_num2[2] += 1
+                        elif i == '5':
+                            paihao_num2[3] += 1
+                        elif i == '6':
+                            paihao_num2[4] += 1
+                        elif i == '7':
+                            paihao_num2[5] += 1
+                        elif i == '8':
+                            paihao_num2[6] += 1
+                        elif i == '9':
+                            paihao_num2[7] += 1
+                        elif i == '1':
+                            paihao_num2[8] += 1
+                        elif i == 'J':
+                            paihao_num2[9] += 1
+                        elif i == 'Q':
+                            paihao_num2[10] += 1
+                        elif i == 'K':
+                            paihao_num2[11] += 1
+                        elif i == 'A':
+                            paihao_num2[12] += 1
+                    for i in range(0, 13):
+                        if paihao_num2[i] == 3:
+                            paixing2[2] += 1
+                        elif paihao_num2[i] == 2:
+                            paixing2[1] += 1
+                    if huase_num2[0] == 3 or huase_num2[1] == 3 or huase_num2[2] == 3 or huase_num2[3] == 3:
+                        head_dengji = 6
+                        for i in range(12, -1, -1):
+                            if paihao_num2[i] == 1:
+                                score += tonghua[0][i]
+                                head_mark = i
+                                break
+                    elif paixing2[2] == 1:
+                        head_dengji = 4
+                        for i in range(12, -1, -1):
+                            if paihao_num2[i] == 3:
+                                score += triple[0][i]
+                                head_mark = i
+                                break
+                    elif paixing2[1] == 1:
+                        head_dengji = 2
+                        for i in range(12, -1, -1):
+                            if paihao_num2[i] == 2:
+                                score += one_pair[0][i]
+                                head_mark = i
+                                break
+                    else:
+                        for i in range(12, -1, -1):
+                            if paihao_num2[i] == 1:
+                                score += danpai[0][i]
+                                head_mark = i
+                                break
+                    if head_dengji > middle_dengji:
+                        continue
+                    elif head_dengji == middle_dengji:
+                        if head_mark > middle_mark:
+                            continue
+                    if score > alscore:
+                        alscore = score
+                        albottom = bottom
+                        almiddle = middle
+                        alhead = head
+
+            print(alhead)
+            print(almiddle)
+            print(albottom)
+            ###算法
+            # *2*3*4#5#6#7#8#9*10*J*Q*K*A
+            #出牌，出牌算法已将收到的牌字符串处理成3个字符串\
+            url = 'http://api.revth.com/game/submit'
+            form_data = {
+                "id": id,
+                "card": [
+                    str(alhead)[:-1],
+                    str(almiddle)[:-1],
+                    str(albottom)[:-1]
+                ]
+            }
+            headers = {
+                "X-Auth-Token": token,
+                "Content-Type": "application/json"
+            }
+            response = requests.post(url=url, headers=headers, data=json.dumps(form_data))
+            print("url返回结果：")
+            print(response.text)
+            if(n==1):
+                root = Tk()
+                photo = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\mm.gif")
+                Label(root, image=photo).place(x=0, y=0, width=1061, height=602)  # 把图片整合到标签类中
+                Label(root, text=str(alhead), font=("华文行楷", 15), bg="#eee7e1").place(x=793, y=173, width=165, height=57)
+                Label(root, text=str(almiddle), font=("华文行楷", 15), bg="#eee7e1").place(x=793, y=268, width=245,height=53)
+                Label(root, text=str(albottom), font=("华文行楷", 15), bg="#eee7e1").place(x=793, y=366, width=245,height=53)
+                warStart(root, token, id, card, user_id)
+            n=n-1
+class choose_interface():
+    def __init__(self,master,token,user_id):
+        self.root = master
+        self.root.title("战局详情查询界面")
+        width = 1080
+        height = 608
+        screenwidth = self.root.winfo_screenwidth()
+        screenheight = self.root.winfo_screenheight()
+        alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2, (screenheight - height) / 2)
+        self.root.geometry(alignstr)
+        self.token=token
+        self.user_id=user_id
+        Button(self.root, text="查询",bg="#ffffff",font=("华文行楷", 40),relief="flat",command=self.clicks).place(x=111,y=232,width=129,height=58)
+        Button(self.root, text="返回", bg="#ffffff", font=("华文行楷", 40), relief="flat", command=self.clickss).place(x=111,y=329,width=129,height=58)
+        v2 = StringVar()
+        self.e1 = Entry(self.root, font="Helvetica 30 bold", textvariable=v2)
+        self.e1.place(x=48, y=116, width=307, height=76)
+        self.root.mainloop()
+    def clicks(self):
+        w = Tk()
+        w.title("历史战局详情")
+        scrollBar = Scrollbar(w)
+        scrollBar.pack(side=RIGHT, fill=Y)
+        tree = ttk.Treeview(w, yscrollcommand=scrollBar.set, show="headings")
+        scrollBar.config(command=tree.yview)
+        def treeviewClick(event):
+            tree.bind('<Button-1>', treeviewClick)
+        tree.bind('<Button-1>', treeviewClick)
+        tree["columns"] = ("roomid", "timestamp", "player_id", "name", "score", "card")
+        tree.column("roomid", width=100, anchor='center')  # 表示列,不显示
+        tree.column("timestamp", width=100, anchor='center')
+        tree.column("player_id", width=100, anchor='center')
+        tree.column("name", width=100, anchor='center')
+        tree.column("score", width=100, anchor='center')
+        tree.column("card", width=400, anchor='center')
+        tree.heading("roomid", text="roomid")  # 显示表头
+        tree.heading("timestamp", text="timestamp")
+        tree.heading("player_id", text="player_id")
+        tree.heading("name", text="name")
+        tree.heading("score", text="score")
+        tree.heading("card", text="card")
+        rd = self.e1.get()#战局id
+        url = "http://api.revth.com/history/" + str(rd)
+        headers = {
+            "X-Auth-Token": self.token
+        }
+        response = requests.get(url=url, headers=headers)
+        x = response.json()
+        x = x["data"]
+        tm = x["timestamp"]
+        h = 0
+        for i in x["detail"]:
+            player_id = i["player_id"]
+            name = i["name"]
+            score = i["score"]
+            card = i["card"]
+            tree.insert("", int(h), values=(rd, tm, player_id, name, score, card))
+            h = h + 1
+        tree.pack()
+    def clickss(self):
+        token=self.token
+        user_id=self.user_id
+        self.root.destroy()
+        root = Tk()
+        photo = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\l.gif")
+        Label(root, image=photo).place(x=0, y=0, width=1080, height=608)  # 把图片整合到标签类中
+        menu_interface(root, token, user_id)
+if __name__ == '__main__':
+    root = Tk()
+    photo = PhotoImage(file="C:\\Users\\ASUS\\Desktop\\D.gif")
+    Label(root, image=photo).place(x=0, y=0, width=1080, height=608)  # 把图片整合到标签类中
+    Initial_interface(root)
+    root.mainloop()
