@@ -3,6 +3,9 @@
 ![](https://img.shields.io/badge/python-3.8-green)<br>
 ![](https://img.shields.io/badge/shisanshui-v1.0.0-brightgreen)<br>
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9a907fddc2414a2f9dd333ebb3b75cf4)](https://www.codacy.com/manual/DDDdreamer/HappyThirteenWater-?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DDDdreamer/HappyThirteenWater-&amp;utm_campaign=Badge_Grade)
+## 编译+运行环境
+    运行环境：windows + 工具版本：python3.8 + 运行前需先下载pyqt5、requests第三方库，可使用pip对pyqt5、requests库进行下载安装
+ [pip使用教程](https://blog.csdn.net/m0_37774696/article/details/84328843)
 ## 使用方法
 下载此仓库中的福建13压缩文件（附带图片，所以会有点大），下载完成后，呀把里面所有文件解压（包括图片），然后直接点击里面的p2运行即可，
 事先已经将文件转化为exe文件。
