@@ -2,7 +2,7 @@
 ## 徽章
 ![](https://img.shields.io/badge/python-3.8-green)<br>
 ![](https://img.shields.io/badge/shisanshui-v1.0.0-brightgreen)<br>
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9a907fddc2414a2f9dd333ebb3b75cf4)][![Codacy Badge](https://api.codacy.com/project/badge/Grade/ed6302f5665a4538bce11bea7511b1e8)](https://www.codacy.com/manual/hzf-hhh/fujian13?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hzf-hhh/fujian13&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ed6302f5665a4538bce11bea7511b1e8)](https://www.codacy.com/manual/hzf-hhh/fujian13?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hzf-hhh/fujian13&amp;utm_campaign=Badge_Grade)
 ## 编译+运行环境
 下载文件exe版本：下载此仓库中的福建13压缩文件（附带图片，所以会有点大），下载完成后，把里面所有文件解压（包括图片），然后直接点击里面的p2运行即可，
 要等一段时间，才会出现界面（完整版本），事先已经将文件转化为exe文件。
